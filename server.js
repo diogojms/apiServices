@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
 var bodyParser = require('body-parser')
+const { specs, swaggerUi } = require('./swagger');
 // const swaggerAutogen = require('swagger-autogen')()
 // const swaggerUi = require('swagger-ui-express')
 // const swaggerFile = require('./swagger_output.json')
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false })); //parse application/x-www-f
 
 // routes
 app.use('/service', require('./Routes/servicesRoutes'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 let port=8084;
 app.listen(port, () => {

@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false })); //parse application/x-www-f
 
 // routes
 app.use('/service', require('./Routes/servicesRoutes'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/api-docs-services', swaggerUi.serve, swaggerUi.setup(specs));
 
 let port=8084;
 app.listen(port, () => {

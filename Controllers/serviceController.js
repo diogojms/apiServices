@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 /**
  * @swagger
- * /services/create:
+ * /CreateService:
  *   post:
  *     summary: Create a new service
  *     description: Endpoint to create a new service.
@@ -60,7 +60,7 @@ exports.CreateService = async (req, res) => {
 
 /**
  * @swagger
- * /services/editName:
+ * /EditServiceName/:
  *   put:
  *     summary: Edit the name of a service
  *     description: Endpoint to edit the name of an existing service.
@@ -139,7 +139,7 @@ exports.EditServiceName = async (req, res) => {
 
 /**
  * @swagger
- * /services/editPrice:
+ * /EditServicePrice/:
  *   put:
  *     summary: Edit the price of a service
  *     description: Endpoint to edit the price of an existing service.
@@ -213,7 +213,7 @@ exports.EditServicePrice = async (req, res) => {
 
 /**
  * @swagger
- * /services/remove:
+ * /RemoveService/:
  *   delete:
  *     summary: Remove a service
  *     description: Endpoint to remove an existing service.
@@ -267,7 +267,7 @@ exports.RemoveService = async (req, res) => {
 
 /**
  * @swagger
- * /services/read:
+ * /ReadService/:
  *   get:
  *     summary: Get service information
  *     description: Endpoint to retrieve information for an existing service.
@@ -318,7 +318,7 @@ exports.ReadService = async (req, res) => {
 
 /**
  * @swagger
- * /services/readAll:
+ * /ReadServices:
  *   get:
  *     summary: Get all services
  *     description: Endpoint to retrieve information for all existing services.

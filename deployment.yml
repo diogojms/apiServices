@@ -19,7 +19,7 @@ spec:
           image: diogojms/pcc_services:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
+            - containerPort: 8084
           env:
             - name: MONGODB_URI
               value: "mongodb+srv://DriveCleaner:DriveCleanerG7@cluster0.bj3pzfe.mongodb.net/User"

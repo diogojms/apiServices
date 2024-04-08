@@ -60,113 +60,37 @@ exports.CreateService = async (req, res) => {
 
 /**
  * @swagger
- * /EditServiceName/:
+ * /EditService/{id}:
  *   put:
- *     summary: Edit the name of a service
- *     description: Endpoint to edit the name of an existing service.
+ *     summary: Edit a service
+ *     description: Endpoint to edit an existing service.
  *     tags:
  *       - Services
  *     parameters:
  *       - name: id
- *         in: query
- *         description: ID of the service to edit the name
+ *         in: path
+ *         description: ID of the service to edit
  *         required: true
  *         schema:
  *           type: string
  *     requestBody:
- *       description: Service name editing data
+ *       description: Service editing data
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               newName:
+ *               name:
  *                 type: string
- *             required:
- *               - newName
- *     responses:
- *       '200':
- *         description: Service name edited successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   enum: [success]
- *                 Service:
- *                   type: object
- *                   // Define your service properties here
- *       '400':
- *         description: Bad Request - Invalid or missing input data
- *       '404':
- *         description: Not Found - Service not found
- *       '500':
- *         description: Internal Server Error - Failed to edit the service name
- */
-exports.EditServiceName = async (req, res) => {
-    try {
-        const { newName } = req.body;
-        const { id } = req.query;
-
-        // Verifica se o ID é válido
-        if (!mongoose.Types.ObjectId.isValid(id)){
-            return res.status(400).json({ msg: 'ID de serviço inválido' });
-        }
-
-        // Verifica se o campo 'name' está presente
-        if (!newName) {
-            return res.status(400).json({ msg: 'O campo "name" é obrigatório' });
-        }
-
-        // Atualiza o serviço pelo ID
-        const updatedService = await Services.findByIdAndUpdate(id, { name: newName }, { new: true });
-
-        // Verifica se o serviço foi encontrado e atualizado
-        if (!updatedService) {
-            return res.status(404).json({ msg: 'Serviço não encontrado' });
-        }
-
-        // Responde com sucesso e os detalhes do servio atualizado
-        res.json({ status: 'success', Service: updatedService });
-    } catch (error) {
-        console.error('Erro ao atualizar o serviço:', error);
-        res.status(500).json({ msg: 'Erro interno do servidor' });
-    }
-};
-
-/**
- * @swagger
- * /EditServicePrice/:
- *   put:
- *     summary: Edit the price of a service
- *     description: Endpoint to edit the price of an existing service.
- *     tags:
- *       - Services
- *     parameters:
- *       - name: serviceID
- *         in: query
- *         description: ID of the service to edit the price
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       description: Service price editing data
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               newPrice:
+ *               price:
  *                 type: number
  *             required:
- *               - newPrice
+ *               - name
+ *               - price
  *     responses:
  *       '200':
- *         description: Service price edited successfully
+ *         description: Service edited successfully
  *         content:
  *           application/json:
  *             schema:
@@ -183,45 +107,45 @@ exports.EditServiceName = async (req, res) => {
  *       '404':
  *         description: Not Found - Service not found
  *       '500':
- *         description: Internal Server Error - Failed to edit the service price
+ *         description: Internal Server Error - Failed to edit the service
  */
-exports.EditServicePrice = async (req, res) => {
+exports.EditService = async (req, res) => {
     try {
-        const { newPrice } = req.body;
-        const { serviceID } = req.query;
+        const { id } = req.params;
+        const { name, price } = req.body;
 
-        // Verifica se o ID do serviço é válido
-        if (!serviceID || !newPrice){
-            return res.status(400).json({ msg: 'ID de serviço ou novo preço inválido' });
+        // Verifica se o ID é válido
+        if (!mongoose.Types.ObjectId.isValid(id)){
+            return res.status(400).json({ msg: 'ID de serviço inválido' });
         }
 
-        const service = await Services.findById(serviceID);
-        if (!service) {
+        // Atualiza o serviço pelo ID
+        const updatedService = await Services.findByIdAndUpdate(id, req.body, { new: true });
+
+        // Verifica se o serviço foi encontrado e atualizado
+        if (!updatedService) {
             return res.status(404).json({ msg: 'Serviço não encontrado' });
         }
 
-        // Atualiza o preço do serviço pelo ID
-
-        const updatedService = await Services.findByIdAndUpdate(serviceID, { price:newPrice }, { new: true });
-
-        res.json({ status: 'success', product: updatedService });
+        // Responde com sucesso e os detalhes do serviço atualizado
+        res.json({ status: 'success', service: updatedService });
     } catch (error) {
-        console.error('Erro ao atualizar o preço do serviço:', error);
+        console.error('Erro ao atualizar o serviço:', error);
         res.status(500).json({ msg: 'Erro interno do servidor' });
     }
 };
 
 /**
  * @swagger
- * /RemoveService/:
+ * /RemoveService/{id}:
  *   delete:
  *     summary: Remove a service
  *     description: Endpoint to remove an existing service.
  *     tags:
  *       - Services
  *     parameters:
- *       - name: serviceID
- *         in: query
+ *       - name: id
+ *         in: path
  *         description: ID of the service to remove
  *         required: true
  *         schema:
@@ -248,13 +172,13 @@ exports.EditServicePrice = async (req, res) => {
  *         description: Internal Server Error - Failed to remove the service
  */
 exports.RemoveService = async (req, res) => {
-    const { serviceID } = req.query;
+    const { id } = req.params;
 
-    if (!serviceID) {
+    if (!id) {
         return res.status(400).json({ msg: 'Invalid service ID' });
     }
 
-    const service = await Services.findById(serviceID);
+    const service = await Services.findById(id);
 
     if (!service) {
         return res.status(404).json({ msg: 'Service not found' });
@@ -267,15 +191,15 @@ exports.RemoveService = async (req, res) => {
 
 /**
  * @swagger
- * /ReadService/:
+ * /ReadService/{id}:
  *   get:
  *     summary: Get service information
  *     description: Endpoint to retrieve information for an existing service.
  *     tags:
  *       - Services
  *     parameters:
- *       - name: serviceID
- *         in: query
+ *       - name: id
+ *         in: path
  *         description: ID of the service to retrieve information
  *         required: true
  *         schema:
@@ -302,13 +226,13 @@ exports.RemoveService = async (req, res) => {
  *         description: Internal Server Error - Failed to retrieve service information
  */
 exports.ReadService = async (req, res) => {
-    const { serviceID } = req.query;
+    const { id } = req.params;
 
-    if (!serviceID) {
+    if (!id) {
         return res.status(400).json({ msg: 'Invalid service ID' });
     }
 
-    const service = await Services.findById(serviceID);
+    const service = await Services.findById(id);
     if (!service) {
         return res.status(404).json({ msg: 'Service not found' });
     }
@@ -344,6 +268,22 @@ exports.ReadService = async (req, res) => {
  *         description: Internal Server Error - Failed to retrieve services
  */
 exports.ReadServices = async (req, res) => {
-    const services = await Services.find();
-    res.json({ status: 'success', services: services })
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    if (limit > 100) {
+        return res.status(400).json({ message: 'Limit cannot exceed 100' });
+    }
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const services = await Services.find().skip(startIndex).limit(limit);
+    const totalServices = await Services.countDocuments();
+
+    const pagination = {
+        currentPage: page,
+        totalPages: Math.ceil(totalServices / limit),
+        totalServices: totalServices
+    };
+
+    res.json({ status: 'success', services: services, pagination: pagination });
 }

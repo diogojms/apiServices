@@ -32,11 +32,10 @@ function isAdmin(req, res, next) {
         res.status(403).json() 
 }
 
-router.post('/CreateService', checkToken, isAdmin, serviceController.CreateService)
-router.post('/EditServiceName/', checkToken, isAdmin, serviceController.EditServiceName)
-router.post('/EditServicePrice/', checkToken, isAdmin, serviceController.EditServicePrice)
-router.post('/RemoveService/', checkToken, isAdmin, serviceController.RemoveService)
-router.get('/ReadService/', serviceController.ReadService)
-router.get('/ReadServices', serviceController.ReadServices)
+router.post('/', checkToken, isAdmin, serviceController.CreateService)
+router.put('/:id', checkToken, isAdmin, serviceController.EditService)
+router.delete('/:id', checkToken, isAdmin, serviceController.RemoveService)
+router.get('/:id', serviceController.ReadService)
+router.get('/', serviceController.ReadServices)
 
 module.exports = router;

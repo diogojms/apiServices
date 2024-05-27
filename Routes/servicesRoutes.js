@@ -35,8 +35,8 @@ function isAdmin(req, res, next) {
 router.post('/', checkToken, isAdmin, serviceController.CreateService)
 router.put('/:id', checkToken, isAdmin, serviceController.EditService)
 router.delete('/:id', checkToken, isAdmin, serviceController.RemoveService)
+router.get('/count', checkToken, isAdmin, serviceController.CountServices)
 router.get('/:id', serviceController.ReadService)
 router.get('/', serviceController.ReadServices)
-router.get('/count', checkToken, isAdmin, serviceController.CountServices)
 
 module.exports = router;

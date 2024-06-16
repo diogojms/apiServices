@@ -58,12 +58,12 @@ exports.CreateService = async (req, res) => {
   if (!name || !price)
     return res.status(400).json({ msg: "Preencha todos os campos" });
 
-  const response = await Services.create({
+  const response = await Service.create({
     name,
     price,
   });
 
-  res.json({ status: "success", Services: response });
+  res.json({ status: "success", Service: response });
 };
 
 /**
@@ -137,7 +137,7 @@ exports.EditService = async (req, res) => {
     }
 
     // Atualiza o serviço pelo ID
-    const updatedService = await Services.findByIdAndUpdate(id, req.body, {
+    const updatedService = await Service.findByIdAndUpdate(id, req.body, {
       new: true,
     });
 
@@ -204,13 +204,13 @@ exports.RemoveService = async (req, res) => {
     return res.status(400).json({ msg: "Invalid service ID" });
   }
 
-  const service = await Services.findById(id);
+  const service = await Service.findById(id);
 
   if (!service) {
     return res.status(404).json({ msg: "Service not found" });
   }
 
-  await Services.deleteOne(service);
+  await Service.deleteOne(service);
 
   res.json({ status: "success", service: service });
 };
@@ -267,7 +267,7 @@ exports.ReadService = async (req, res) => {
     return res.status(400).json({ msg: "Invalid service ID" });
   }
 
-  const service = await Services.findById(id);
+  const service = await Service.findById(id);
   if (!service) {
     return res.status(404).json({ msg: "Service not found" });
   }
@@ -320,8 +320,8 @@ exports.ReadServices = async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const services = await Services.find().skip(startIndex).limit(limit);
-  const totalServices = await Services.countDocuments();
+  const services = await Service.find().skip(startIndex).limit(limit);
+  const totalServices = await Service.countDocuments();
 
   const pagination = {
     currentPage: page,

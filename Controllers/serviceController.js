@@ -1,6 +1,5 @@
-const Service = require('../Models/services');
-const Services = require('../Models/services');
-const mongoose = require('mongoose');
+const Service = require("../Models/services");
+const mongoose = require("mongoose");
 
 /**
  * @swagger
@@ -36,27 +35,36 @@ const mongoose = require('mongoose');
  *                 status:
  *                   type: string
  *                   enum: [success]
- *                 Services:
+ *                 service:
  *                   type: object
- *                   // Define your service properties here
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *                     createdAt:
+ *                       type: string
  *       '400':
  *         description: Bad Request - Invalid or missing input data
  *       '500':
  *         description: Internal Server Error - Failed to create the service
  */
+
 exports.CreateService = async (req, res) => {
-    const {name, price} = req.body
+  const { name, price } = req.body;
 
-    if(!name || !price)
-        return res.status(400).json({msg: 'Preencha todos os campos'})
+  if (!name || !price)
+    return res.status(400).json({ msg: "Preencha todos os campos" });
 
-    const response = await Services.create({
-        name,
-        price
-    })
+  const response = await Services.create({
+    name,
+    price,
+  });
 
-    res.json({status:'success', Services: response})
-}
+  res.json({ status: "success", Services: response });
+};
 
 /**
  * @swagger
@@ -101,7 +109,15 @@ exports.CreateService = async (req, res) => {
  *                   enum: [success]
  *                 service:
  *                   type: object
- *                   // Define your service properties here
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *                     updatedAt:
+ *                       type: string
  *       '400':
  *         description: Bad Request - Invalid or missing input data
  *       '404':
@@ -109,30 +125,33 @@ exports.CreateService = async (req, res) => {
  *       '500':
  *         description: Internal Server Error - Failed to edit the service
  */
+
 exports.EditService = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, price } = req.body;
+  try {
+    const { id } = req.params;
+    const { name, price } = req.body;
 
-        // Verifica se o ID é válido
-        if (!mongoose.Types.ObjectId.isValid(id)){
-            return res.status(400).json({ msg: 'ID de serviço inválido' });
-        }
-
-        // Atualiza o serviço pelo ID
-        const updatedService = await Services.findByIdAndUpdate(id, req.body, { new: true });
-
-        // Verifica se o serviço foi encontrado e atualizado
-        if (!updatedService) {
-            return res.status(404).json({ msg: 'Serviço não encontrado' });
-        }
-
-        // Responde com sucesso e os detalhes do serviço atualizado
-        res.json({ status: 'success', service: updatedService });
-    } catch (error) {
-        console.error('Erro ao atualizar o serviço:', error);
-        res.status(500).json({ msg: 'Erro interno do servidor' });
+    // Verifica se o ID é válido
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "ID de serviço inválido" });
     }
+
+    // Atualiza o serviço pelo ID
+    const updatedService = await Services.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+
+    // Verifica se o serviço foi encontrado e atualizado
+    if (!updatedService) {
+      return res.status(404).json({ msg: "Serviço não encontrado" });
+    }
+
+    // Responde com sucesso e os detalhes do serviço atualizado
+    res.json({ status: "success", service: updatedService });
+  } catch (error) {
+    console.error("Erro ao atualizar o serviço:", error);
+    res.status(500).json({ msg: "Erro interno do servidor" });
+  }
 };
 
 /**
@@ -163,7 +182,13 @@ exports.EditService = async (req, res) => {
  *                   enum: [success]
  *                 service:
  *                   type: object
- *                   // Define your service properties here
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     price:
+ *                       type: number
  *       '400':
  *         description: Bad Request - Invalid service ID
  *       '404':
@@ -171,23 +196,24 @@ exports.EditService = async (req, res) => {
  *       '500':
  *         description: Internal Server Error - Failed to remove the service
  */
+
 exports.RemoveService = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    if (!id) {
-        return res.status(400).json({ msg: 'Invalid service ID' });
-    }
+  if (!id) {
+    return res.status(400).json({ msg: "Invalid service ID" });
+  }
 
-    const service = await Services.findById(id);
+  const service = await Services.findById(id);
 
-    if (!service) {
-        return res.status(404).json({ msg: 'Service not found' });
-    }
+  if (!service) {
+    return res.status(404).json({ msg: "Service not found" });
+  }
 
-    await Services.deleteOne(service);
+  await Services.deleteOne(service);
 
-    res.json({ status: 'success', service: service});
-}
+  res.json({ status: "success", service: service });
+};
 
 /**
  * @swagger
@@ -217,7 +243,15 @@ exports.RemoveService = async (req, res) => {
  *                   enum: [success]
  *                 service:
  *                   type: object
- *                   // Define your service properties here
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *                     createdAt:
+ *                       type: string
  *       '400':
  *         description: Bad Request - Invalid service ID
  *       '404':
@@ -225,20 +259,21 @@ exports.RemoveService = async (req, res) => {
  *       '500':
  *         description: Internal Server Error - Failed to retrieve service information
  */
+
 exports.ReadService = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    if (!id) {
-        return res.status(400).json({ msg: 'Invalid service ID' });
-    }
+  if (!id) {
+    return res.status(400).json({ msg: "Invalid service ID" });
+  }
 
-    const service = await Services.findById(id);
-    if (!service) {
-        return res.status(404).json({ msg: 'Service not found' });
-    }
+  const service = await Services.findById(id);
+  if (!service) {
+    return res.status(404).json({ msg: "Service not found" });
+  }
 
-    res.json({ status: 'success', service: service})
-}
+  res.json({ status: "success", service: service });
+};
 
 /**
  * @swagger
@@ -263,37 +298,73 @@ exports.ReadService = async (req, res) => {
  *                   type: array
  *                   items:
  *                     type: object
- *                     // Define your service properties here
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       price:
+ *                         type: number
+ *                       createdAt:
+ *                         type: string
  *       '500':
  *         description: Internal Server Error - Failed to retrieve services
  */
+
 exports.ReadServices = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    if (limit > 100) {
-        return res.status(400).json({ message: 'Limit cannot exceed 100' });
-    }
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  if (limit > 100) {
+    return res.status(400).json({ message: "Limit cannot exceed 100" });
+  }
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
 
-    const services = await Services.find().skip(startIndex).limit(limit);
-    const totalServices = await Services.countDocuments();
+  const services = await Services.find().skip(startIndex).limit(limit);
+  const totalServices = await Services.countDocuments();
 
-    const pagination = {
-        currentPage: page,
-        totalPages: Math.ceil(totalServices / limit),
-        totalServices: totalServices
-    };
+  const pagination = {
+    currentPage: page,
+    totalPages: Math.ceil(totalServices / limit),
+    totalServices: totalServices,
+  };
 
-    res.json({ status: 'success', services: services, pagination: pagination });
-}
+  res.json({ status: "success", services: services, pagination: pagination });
+};
+
+/**
+ * @swagger
+ * /CountServices:
+ *   get:
+ *     summary: Count all services
+ *     description: Endpoint to count all existing services.
+ *     tags:
+ *       - Services
+ *     responses:
+ *       '200':
+ *         description: Service count retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   enum: [success]
+ *                 serviceCount:
+ *                   type: number
+ *       '500':
+ *         description: Internal Server Error - Failed to count services
+ */
 
 exports.CountServices = async (req, res) => {
-    try {
-      const totalServices = await Service.countDocuments();
-      res.json({ status: 200, message: 'Count retrieved successfully', data: { totalServices } });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ status: 500, message: 'Error counting services', data: {} });
-    }
-  };
+  try {
+    const totalServices = await Service.countDocuments();
+    res.status(200).json({ serviceCount: totalServices });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ status: 500, message: "Error counting services", data: {} });
+  }
+};

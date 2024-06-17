@@ -313,24 +313,25 @@ exports.ReadService = async (req, res) => {
 
 exports.ReadServices = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
-  if (limit > 100) {
-    return res.status(400).json({ message: "Limit cannot exceed 100" });
-  }
+  const limit = parseInt(req.query.limit) || Number.MAX_SAFE_INTEGER;
   const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
 
-  const services = await Service.find().skip(startIndex).limit(limit);
-  const totalServices = await Service.countDocuments();
+  try {
+    const services = await Service.find().skip(startIndex).limit(limit);
+    const totalServices = await Service.countDocuments();
 
-  const pagination = {
-    currentPage: page,
-    totalPages: Math.ceil(totalServices / limit),
-    totalServices: totalServices,
-  };
+    const pagination = {
+      currentPage: page,
+      totalPages: Math.ceil(totalServices / limit),
+      totalServices: totalServices,
+    };
 
-  res.json({ status: "success", services: services, pagination: pagination });
+    res.json({ status: "success", services: services, pagination: pagination });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
 };
+
 
 /**
  * @swagger
